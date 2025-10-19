@@ -51,7 +51,6 @@ export const CountryCityProvider = ({ children }) => {
       );
       const citiesList = res.data.data.map((c) => c.toLowerCase());
       setCities(citiesList);
-      console.log(citiesList);
       // default city
       if (selectCountry.country === "Egypt") {
         if (citiesList.includes("cairo")) {

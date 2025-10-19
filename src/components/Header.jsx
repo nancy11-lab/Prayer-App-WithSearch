@@ -6,7 +6,7 @@ import {
   Stack,
   IconButton,
   MenuItem,
-  Select
+  Select,
 } from "@mui/material";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
@@ -31,23 +31,31 @@ export default function Header() {
       position="sticky"
       sx={{ bgcolor: "background.paper", color: "text.primary" }}
     >
-      <Toolbar disableGutters sx={{ display: "flex", justifyContent: "space-between"  , px:{xs : 1 , sm: 2}}}>
+      <Toolbar
+        disableGutters
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          px: { xs: 1, sm: 2 },
+        }}
+      >
         {/* Logo / Title */}
         <Typography
           variant="h6"
           component="div"
           sx={{ display: "flex", alignItems: "center", gap: 1 }}
         >
-          <img
+          <Box
+            component="img"
             src="/images/prayer-logo.png"
-            alt="Prayer Timings Logo"
+            alt="Logo"
             style={{ width: "40px", height: "40px" }}
           />
           {t("appName")}
         </Typography>
 
         {/* Language Switchers */}
-        <Stack direction="row" spacing={1} alignItems="center" >
+        <Stack direction="row" spacing={1} alignItems="center">
           {/*  Dropdown */}
           <Select
             size="small"

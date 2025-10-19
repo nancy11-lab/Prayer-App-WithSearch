@@ -14,7 +14,7 @@ export const ThemeContextProvider = ({ children }) => {
     const newTheme = themeMode === "dark" ? "light" : "dark";
     setThemeMode(newTheme);
     localStorage.setItem("themeMode", newTheme);
-    console.log("theme change", newTheme);
+    // console.log("theme change", newTheme);
   };
 
   //تحديد الاتجاه حسب اللغه

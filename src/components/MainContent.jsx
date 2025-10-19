@@ -55,12 +55,12 @@ export default function MainContent() {
   //get prayer timrs by city
   const getTimings = async (countryName, cityName) => {
     try {
-      console.log("from mainContent", countryName, cityName);
+      // console.log("from mainContent", countryName, cityName);
       const response = await axios.get(
         `https://api.aladhan.com/v1/timingsByCity?country=${countryName}&city=${cityName}`
       );
       if (response.data?.data?.timings) {
-        console.log(response.data.data.timings);
+        // console.log(response.data.data.timings);
         setTimings(response.data.data.timings);
       }
     } catch (error) {
@@ -83,7 +83,7 @@ export default function MainContent() {
     }
 
     getTimings(country.country, selectedCity);
-    console.log("***********************");
+    // console.log("***********************");
   }, [country, selectedCity, loadingCities]);
 
   // update live clock and countdown
