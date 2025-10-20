@@ -7,7 +7,7 @@ import {
   IconButton,
   MenuItem,
   Select,
-  Box
+  Box,
 } from "@mui/material";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
@@ -44,7 +44,12 @@ export default function Header() {
         <Typography
           variant="h6"
           component="div"
-          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "row",
+            gap: 1,
+          }}
         >
           <Box
             component="img"
