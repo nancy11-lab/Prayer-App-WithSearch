@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { ThemeContext } from "../Context/ThemeContext";
 import { useTheme } from "@mui/material/styles";
 
+import logo from "../assets/prayer-logo.png"
+
 export default function Header() {
   const { t, i18n } = useTranslation();
 
@@ -53,7 +55,7 @@ export default function Header() {
         >
           <Box
             component="img"
-            src="/images/prayer-logo.png"
+            src={logo}
             alt="Logo"
             style={{ width: "40px", height: "40px" }}
           />
