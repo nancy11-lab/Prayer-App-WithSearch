@@ -7,6 +7,7 @@ import {
   IconButton,
   MenuItem,
   Select,
+  Box
 } from "@mui/material";
 import { DarkMode, LightMode } from "@mui/icons-material";
 import { motion, AnimatePresence } from "framer-motion";
