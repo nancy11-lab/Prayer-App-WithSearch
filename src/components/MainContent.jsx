@@ -39,17 +39,20 @@ const prayersArray = [
   { key: "Isha", displayName: "العشاء", icon: <Nightlight /> },
 ];
 
+
 export default function MainContent() {
   const { t, i18n } = useTranslation();
 
   //State
   const [timings, setTimings] = useState({});
-  const { country, selectedCity, loadingCities } = useCountryCity();
+  const { country, selectedCity, loadingCities } =
+    useCountryCity();
 
   const [today, setToday] = useState(moment());
 
   const [nextPrayerIndex, setNextPrayerIndex] = useState(0);
   const [remainingTime, setRemainingTime] = useState("");
+  const [lastCityForTimings, setLastCityForTimings] = useState("cairo");
 
   // get data from api
   //get prayer timrs by city
@@ -68,22 +71,32 @@ export default function MainContent() {
     }
   };
 
+ 
   useEffect(() => {
-    //لو لسه بنجيب المدن
     if (loadingCities) return;
 
-    //في دوله محدده لكن المدينه لسع فاضيه
-    if (country && (!selectedCity || selectedCity === "")) {
-      return;
-    }
-    // مفيش دوله محدده
+    let cityToUse = "";
+
     if (!country) {
-      getTimings("Egypt", "cairo");
+      cityToUse = "cairo";
+      setLastCityForTimings(cityToUse);
+      getTimings("Egypt", cityToUse);
       return;
     }
 
-    getTimings(country.country, selectedCity);
-    // console.log("***********************");
+    if (country.country === "Egypt") {
+      cityToUse = selectedCity && selectedCity !== "" ? selectedCity : "cairo";
+    } else {
+      cityToUse =
+        selectedCity && selectedCity !== ""
+          ? selectedCity
+          : country.cities?.[0] || "";
+    }
+
+    if (cityToUse) {
+      setLastCityForTimings(cityToUse);
+      getTimings(country.country, cityToUse);
+    }
   }, [country, selectedCity, loadingCities]);
 
   // update live clock and countdown
@@ -105,18 +118,17 @@ export default function MainContent() {
     // console.log("lang : ", lang);
   }, [i18n.language]);
 
+  // إعداد اسم المدينة المعروضة بناءً على آخر مدينة تم جلب مواقيتها
   const normalizedCountry = country?.country?.toLowerCase() || "egypt";
-  const normalizedCity = selectedCity?.toLowerCase() || "cairo";
+  const normalizedCity = lastCityForTimings?.toLowerCase() || "cairo";
 
   const translatedCity = t(
     `countries.${normalizedCountry}.cities.${normalizedCity}.${i18n.language}`,
     {
-      defaultValue:
-        i18n.language === "ar"
-          ? normalizedCity === "cairo"
-            ? "القاهرة"
-            : normalizedCity
-          : normalizedCity.charAt(0).toUpperCase() + normalizedCity.slice(1),
+      defaultValue: t(
+        `countries.${normalizedCountry}.cities.${normalizedCity}.en`,
+        { defaultValue: normalizedCity }
+      ),
     }
   );
 
@@ -209,7 +221,7 @@ export default function MainContent() {
         }}
       >
         <Grid size={{ xs: 12, md: 6 }}>
-          <Box sx={{ textAlign:{ xs : "start" , md:"center"}}}>
+          <Box sx={{ textAlign: { xs: "start", md: "center" } }}>
             <Typography variant="h6" component="div">
               {today.format("MMMM Do YYYY |  h:mm a")}
             </Typography>
@@ -219,7 +231,7 @@ export default function MainContent() {
           </Box>
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <Box sx={{textAlign:{ xs : "start" , md:"center"}}}>
+          <Box sx={{ textAlign: { xs: "start", md: "center" } }}>
             <Typography variant="h6" component="div">
               {t("title-prayer")}{" "}
               <Typography

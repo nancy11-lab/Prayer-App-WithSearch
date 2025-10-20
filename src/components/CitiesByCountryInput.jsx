@@ -5,6 +5,13 @@ import { useTranslation } from "react-i18next";
 import { useCountryCity } from "../Context/CountryCityContext";
 import { CustomPopper } from "../Features/CustomPopper";
 
+const getDefaultCity = (country) => {
+  if (!country) return "cairo"; // مفيش دولة → القاهرة
+  if (country.country === "Egypt") return "cairo"; // مصر → القاهرة
+  if (country.cities?.length > 0) return country.cities[0]; // أي دولة تانية → أول مدينة
+  return ""; // fallback
+};
+
 export default function CitiesByCountryInput() {
   const { t, i18n } = useTranslation();
   const {
@@ -30,7 +37,9 @@ export default function CitiesByCountryInput() {
     // const countryKey = country.toLowerCase();
     const cityKey = cityName.toLowerCase();
     const translation = t(
-      `countries.${country?.country?.toLowerCase()}.cities.${cityKey}.${i18n.language}`,
+      `countries.${country?.country?.toLowerCase()}.cities.${cityKey}.${
+        i18n.language
+      }`,
       {
         defaultValue: "",
       }
@@ -38,15 +47,21 @@ export default function CitiesByCountryInput() {
     return translation !== "" ? translation : cityName; // لو موجود تلرجم لو مش موجود رجع الاصلي
   };
 
-  // handle change of country
-  const handleCountryChange = (e, newValue) => {
-    setCountry(newValue || null);
-
-    if (!newValue) {
-      //لو مفيش دوله
-      setSelectedCity("");
+  const handleCountryChange = (e, newCountry) => {
+    setCountry(newCountry || null);
+    if (!newCountry) {
+      setSelectedCity(getDefaultCity(null));
       return;
     }
+    setSelectedCity(getDefaultCity(newCountry));
+  };
+
+  const handleCityChange = (e, newCity) => {
+   if(!newCity || newCity === ""){
+    setSelectedCity(getDefaultCity(country));
+   }else{
+    setSelectedCity(newCity);
+   }
   };
 
   // popper
@@ -89,7 +104,7 @@ export default function CitiesByCountryInput() {
 
   return (
     <>
-      <Box sx={{ width: { xs: "90%" , sm : "45%" , md:"35%"} }}>
+      <Box sx={{ width: { xs: "90%", sm: "45%", md: "35%" } }}>
         <Autocomplete
           {...commonProps}
           getOptionLabel={(option) => getCountryLabel(option.country)}
@@ -118,7 +133,7 @@ export default function CitiesByCountryInput() {
         />
       </Box>
       {/* // cities */}
-      <Box sx={{ width: { xs: "90%" , sm : "45%" ,  md:"35%"} }}>
+      <Box sx={{ width: { xs: "90%", sm: "45%", md: "35%" } }}>
         <Autocomplete
           {...commonProps}
           getOptionLabel={
@@ -126,7 +141,7 @@ export default function CitiesByCountryInput() {
           }
           options={cities}
           value={selectedCity || null}
-          onChange={(e, newValue) => setSelectedCity(newValue || "")}
+          onChange={handleCityChange}
           loading={loadingCities}
           disabled={!country}
           clearOnEscape // يمسح عند الضغط علي Esc
